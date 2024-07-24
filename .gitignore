@@ -1,3 +1,21 @@
+# STM32CubeIDE metadata
+peripheral-drivers/.metadata/
+
+# Build artifacts
+peripheral-drivers/stm32f4xx-drivers/Debug/
+peripheral-drivers/stm32f4xx-drivers/Release/
+*.bin
+
+# Settings files
+peripheral-drivers/stm32f4xx-drivers/.settings/
+*.xml
+*.prefs
+
+# Eclipse project files
+peripheral-drivers/stm32f4xx-drivers/.cproject
+peripheral-drivers/stm32f4xx-drivers/.project
+*.xmi
+
 # Prerequisites
 *.d
 
@@ -50,3 +68,16 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Log files
+*.log
+*.cyclo
+
+# History and index files
+*.history
+*.index
+*.list
+
+# Makefiles
+*.mk
+
