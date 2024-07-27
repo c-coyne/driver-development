@@ -181,24 +181,42 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t En) {
 // Data read / write
 uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber) {
 
-	return 0;
+	uint8_t value;
+	value = (uint8_t)( (pGPIOx->IDR >> pinNumber) & 0x00000001 );
+	return value;
+
 }
 
 uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx) {
 
+	uint16_t value;
+	value = (uint16_t)(pGPIOx->IDR);
+	return value;
 
-	return 0;
 }
 
 void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber, uint8_t Value) {
+
+	if(GPIO_PIN_SET == Value) {
+		// write 1 to output data register at the bit field corresponding to the pin
+		pGPIOx->ODR |= ( 1 << pinNumber );
+	}
+	else {
+		// write 0
+		pGPIOx->ODR &= ~( 1 << pinNumber );
+	}
 
 }
 
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value) {
 
+	pGPIOx->ODR = Value;
+
 }
 
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber) {
+
+	pGPIOx->ODR ^= ( 1 << pinNumber );
 
 }
 
