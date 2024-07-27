@@ -78,6 +78,17 @@ typedef struct {
 } RCC_RegDef_t;
 
 /****************************************************
+ *  Generic macros                                  *
+ ****************************************************/
+
+#define ENABLE                  1
+#define DISABLE                 0
+#define SET                     ENABLE
+#define RESET                   DISABLE
+#define GPIO_PIN_SET            SET
+#define GPIO_PIN_RESET          RESET
+
+/****************************************************
  *  Peripheral register definitions                 *
  ****************************************************/
 
@@ -100,95 +111,109 @@ typedef struct {
  ****************************************************/
 
 // GPIO
-#define ENABLE_GPIOA_CLK()      ( RCC->AHB1ENR | ( 1 << 0 ) )
-#define ENABLE_GPIOB_CLK()      ( RCC->AHB1ENR | ( 1 << 1 ) )
-#define ENABLE_GPIOC_CLK()      ( RCC->AHB1ENR | ( 1 << 2 ) )
-#define ENABLE_GPIOD_CLK()      ( RCC->AHB1ENR | ( 1 << 3 ) )
-#define ENABLE_GPIOE_CLK()      ( RCC->AHB1ENR | ( 1 << 4 ) )
-#define ENABLE_GPIOF_CLK()      ( RCC->AHB1ENR | ( 1 << 5 ) )
-#define ENABLE_GPIOG_CLK()      ( RCC->AHB1ENR | ( 1 << 6 ) )
-#define ENABLE_GPIOH_CLK()      ( RCC->AHB1ENR | ( 1 << 7 ) )
-#define ENABLE_GPIOI_CLK()      ( RCC->AHB1ENR | ( 1 << 8 ) )
+#define ENABLE_GPIOA_CLK()      ( RCC->AHB1ENR |= ( 1 << 0 ) )
+#define ENABLE_GPIOB_CLK()      ( RCC->AHB1ENR |= ( 1 << 1 ) )
+#define ENABLE_GPIOC_CLK()      ( RCC->AHB1ENR |= ( 1 << 2 ) )
+#define ENABLE_GPIOD_CLK()      ( RCC->AHB1ENR |= ( 1 << 3 ) )
+#define ENABLE_GPIOE_CLK()      ( RCC->AHB1ENR |= ( 1 << 4 ) )
+#define ENABLE_GPIOF_CLK()      ( RCC->AHB1ENR |= ( 1 << 5 ) )
+#define ENABLE_GPIOG_CLK()      ( RCC->AHB1ENR |= ( 1 << 6 ) )
+#define ENABLE_GPIOH_CLK()      ( RCC->AHB1ENR |= ( 1 << 7 ) )
+#define ENABLE_GPIOI_CLK()      ( RCC->AHB1ENR |= ( 1 << 8 ) )
 
 // I2C
-#define ENABLE_I2C1_CLK()       ( RCC->APB1ENR | ( 1 << 21 ) )
-#define ENABLE_I2C2_CLK()       ( RCC->APB1ENR | ( 1 << 22 ) )
-#define ENABLE_I2C3_CLK()       ( RCC->APB1ENR | ( 1 << 23 ) )
+#define ENABLE_I2C1_CLK()       ( RCC->APB1ENR |= ( 1 << 21 ) )
+#define ENABLE_I2C2_CLK()       ( RCC->APB1ENR |= ( 1 << 22 ) )
+#define ENABLE_I2C3_CLK()       ( RCC->APB1ENR |= ( 1 << 23 ) )
 
 // SPI
-#define ENABLE_SPI1_CLK()       ( RCC->APB2ENR | ( 1 << 12 ) )
+#define ENABLE_SPI1_CLK()       ( RCC->APB2ENR |= ( 1 << 12 ) )
 
 // USART
-#define ENABLE_USART1_CLK()     ( RCC->APB2ENR | ( 1 << 4 ) )
-#define ENABLE_USART2_CLK()     ( RCC->APB1ENR | ( 1 << 17 ) )
-#define ENABLE_USART3_CLK()     ( RCC->APB1ENR | ( 1 << 18 ) )
-#define ENABLE_USART6_CLK()     ( RCC->APB2ENR | ( 1 << 5 ) )
+#define ENABLE_USART1_CLK()     ( RCC->APB2ENR |= ( 1 << 4 ) )
+#define ENABLE_USART2_CLK()     ( RCC->APB1ENR |= ( 1 << 17 ) )
+#define ENABLE_USART3_CLK()     ( RCC->APB1ENR |= ( 1 << 18 ) )
+#define ENABLE_USART6_CLK()     ( RCC->APB2ENR |= ( 1 << 5 ) )
 
 // UART
-#define ENABLE_UART4_CLK()      ( RCC->APB1ENR | ( 1 << 19 ) )
-#define ENABLE_UART5_CLK()      ( RCC->APB1ENR | ( 1 << 20 ) )
+#define ENABLE_UART4_CLK()      ( RCC->APB1ENR |= ( 1 << 19 ) )
+#define ENABLE_UART5_CLK()      ( RCC->APB1ENR |= ( 1 << 20 ) )
 
 // SYSCFG
-#define ENABLE_SYSCFG_CLK()     ( RCC->APB2ENR | ( 1 << 14 ) )
+#define ENABLE_SYSCFG_CLK()     ( RCC->APB2ENR |= ( 1 << 14 ) )
 
 /****************************************************
  *  Clock disable macros                            *
  ****************************************************/
 
 // GPIO
-#define DISABLE_GPIOA_CLK()     ( RCC->AHB1ENR & ~( 1 << 0 ) )
-#define DISABLE_GPIOB_CLK()     ( RCC->AHB1ENR & ~( 1 << 1 ) )
-#define DISABLE_GPIOC_CLK()     ( RCC->AHB1ENR & ~( 1 << 2 ) )
-#define DISABLE_GPIOD_CLK()     ( RCC->AHB1ENR & ~( 1 << 3 ) )
-#define DISABLE_GPIOE_CLK()     ( RCC->AHB1ENR & ~( 1 << 4 ) )
-#define DISABLE_GPIOF_CLK()     ( RCC->AHB1ENR & ~( 1 << 5 ) )
-#define DISABLE_GPIOG_CLK()     ( RCC->AHB1ENR & ~( 1 << 6 ) )
-#define DISABLE_GPIOH_CLK()     ( RCC->AHB1ENR & ~( 1 << 7 ) )
-#define DISABLE_GPIOI_CLK()     ( RCC->AHB1ENR & ~( 1 << 8 ) )
+#define DISABLE_GPIOA_CLK()     ( RCC->AHB1ENR &= ~( 1 << 0 ) )
+#define DISABLE_GPIOB_CLK()     ( RCC->AHB1ENR &= ~( 1 << 1 ) )
+#define DISABLE_GPIOC_CLK()     ( RCC->AHB1ENR &= ~( 1 << 2 ) )
+#define DISABLE_GPIOD_CLK()     ( RCC->AHB1ENR &= ~( 1 << 3 ) )
+#define DISABLE_GPIOE_CLK()     ( RCC->AHB1ENR &= ~( 1 << 4 ) )
+#define DISABLE_GPIOF_CLK()     ( RCC->AHB1ENR &= ~( 1 << 5 ) )
+#define DISABLE_GPIOG_CLK()     ( RCC->AHB1ENR &= ~( 1 << 6 ) )
+#define DISABLE_GPIOH_CLK()     ( RCC->AHB1ENR &= ~( 1 << 7 ) )
+#define DISABLE_GPIOI_CLK()     ( RCC->AHB1ENR &= ~( 1 << 8 ) )
 
 // I2C
-#define DISABLE_I2C1_CLK()      ( RCC->APB1ENR & ~( 1 << 21 ) )
-#define DISABLE_I2C2_CLK()      ( RCC->APB1ENR & ~( 1 << 22 ) )
-#define DISABLE_I2C3_CLK()      ( RCC->APB1ENR & ~( 1 << 23 ) )
+#define DISABLE_I2C1_CLK()      ( RCC->APB1ENR &= ~( 1 << 21 ) )
+#define DISABLE_I2C2_CLK()      ( RCC->APB1ENR &= ~( 1 << 22 ) )
+#define DISABLE_I2C3_CLK()      ( RCC->APB1ENR &= ~( 1 << 23 ) )
 
 // SPI
-#define DISABLE_SPI1_CLK()      ( RCC->APB2ENR & ~( 1 << 12 ) )
+#define DISABLE_SPI1_CLK()      ( RCC->APB2ENR &= ~( 1 << 12 ) )
 
 // USART
-#define DISABLE_USART1_CLK()    ( RCC->APB2ENR & ~( 1 << 4 ) )
-#define DISABLE_USART2_CLK()    ( RCC->APB1ENR & ~( 1 << 17 ) )
-#define DISABLE_USART3_CLK()    ( RCC->APB1ENR & ~( 1 << 18 ) )
-#define DISABLE_USART6_CLK()    ( RCC->APB2ENR & ~( 1 << 5 ) )
+#define DISABLE_USART1_CLK()    ( RCC->APB2ENR &= ~( 1 << 4 ) )
+#define DISABLE_USART2_CLK()    ( RCC->APB1ENR &= ~( 1 << 17 ) )
+#define DISABLE_USART3_CLK()    ( RCC->APB1ENR &= ~( 1 << 18 ) )
+#define DISABLE_USART6_CLK()    ( RCC->APB2ENR &= ~( 1 << 5 ) )
 
 // UART
-#define DISABLE_UART4_CLK()     ( RCC->APB1ENR & ~( 1 << 19 ) )
-#define DISABLE_UART5_CLK()     ( RCC->APB1ENR & ~( 1 << 20 ) )
+#define DISABLE_UART4_CLK()     ( RCC->APB1ENR &= ~( 1 << 19 ) )
+#define DISABLE_UART5_CLK()     ( RCC->APB1ENR &= ~( 1 << 20 ) )
 
 // SYSCFG
-#define DISABLE_SYSCFG_CLK()    ( RCC->APB2ENR & ~( 1 << 14 ) )
+#define DISABLE_SYSCFG_CLK()    ( RCC->APB2ENR &= ~( 1 << 14 ) )
+
+/****************************************************
+ *  GPIOx peripheral reset macros                   *
+ ****************************************************/
+
+#define GPIOA_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 0)); (RCC->AHB1RSTR &= ~(1 << 0)); } while(0)
+#define GPIOB_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 1)); (RCC->AHB1RSTR &= ~(1 << 1)); } while(0)
+#define GPIOC_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 2)); (RCC->AHB1RSTR &= ~(1 << 2)); } while(0)
+#define GPIOD_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 3)); (RCC->AHB1RSTR &= ~(1 << 3)); } while(0)
+#define GPIOE_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 4)); (RCC->AHB1RSTR &= ~(1 << 4)); } while(0)
+#define GPIOF_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 5)); (RCC->AHB1RSTR &= ~(1 << 5)); } while(0)
+#define GPIOG_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 6)); (RCC->AHB1RSTR &= ~(1 << 6)); } while(0)
+#define GPIOH_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 7)); (RCC->AHB1RSTR &= ~(1 << 7)); } while(0)
+#define GPIOI_REG_RESET()		do { (RCC->AHB1RSTR |= (1 << 8)); (RCC->AHB1RSTR &= ~(1 << 8)); } while(0)
 
 /****************************************************
  *  Flash and SRAM                                  *
  ****************************************************/
 
-#define FLASH_BASEADDR			0x0800_0000U
-#define SRAM1_BASEADDR			0x2000_0000U	// 112 kB
-#define SRAM2_BASEADDR			0x2000_1C00U	// 16 kB
-#define ROM_BASEADDR			0x1FFF_0000U
-#define OTP_BASEADDR			0x1FFF_7800U
+#define FLASH_BASEADDR			0x08000000U
+#define SRAM1_BASEADDR			0x20000000U		// 112 kB
+#define SRAM2_BASEADDR			0x20001C00U		// 16 kB
+#define ROM_BASEADDR			0x1FFF0000U
+#define OTP_BASEADDR			0x1FFF7800U
 #define SRAM_BASEADDR			SRAM1_BASEADDR
 
 /****************************************************
  *  AHBx and APBx bus peripherals                   *
  ****************************************************/
 
-#define PERIPH_BASEADDR			0x4000_0000U
+#define PERIPH_BASEADDR			0x40000000U
 
 //****************************** AHB2 ******************************//
-#define AHB2PERIPH_BASEADDR		0x5000_0000U                        //
-#define RNG_BASEADDR			( AHB2PERIPH_BASEADDR + 0x6_0800 )  // 0x5006_0800-0x5006_0BFF
+#define AHB2PERIPH_BASEADDR		0x50000000U                         //
+#define RNG_BASEADDR			( AHB2PERIPH_BASEADDR + 0x60800 )   // 0x5006_0800-0x5006_0BFF
 // --------------------------- RESERVED --------------------------- // 0x5005_0400-0x5006_07FF
-#define DCMI_BASEADDR			( AHB2PERIPH_BASEADDR + 0x5_0000 )  // 0x5005_0000-0x5005_03FF
+#define DCMI_BASEADDR			( AHB2PERIPH_BASEADDR + 0x50000 )   // 0x5005_0000-0x5005_03FF
 // --------------------------- RESERVED --------------------------- // 0x5004_0000-0x5004_FFFF
 #define USBOTGFS_BASEADDR		( AHB2PERIPH_BASEADDR + 0x0000 )    // 0x5000_0000-0x5003_FFFF
 //******************************************************************//
@@ -196,8 +221,8 @@ typedef struct {
 // --------------------------- RESERVED --------------------------- // 0x4008_0000-0x4FFF_FFFF
 
 //****************************** AHB1 ******************************//
-#define AHB1PERIPH_BASEADDR		0x4002_0000U                        //
-#define USBOTGHS_BASEADDR		( AHB1PERIPH_BASEADDR + 0x2_0000 )  // 0x4004_0000-0x4007_FFFF
+#define AHB1PERIPH_BASEADDR		0x40020000U                         //
+#define USBOTGHS_BASEADDR		( AHB1PERIPH_BASEADDR + 0x20000 )   // 0x4004_0000-0x4007_FFFF
 // --------------------------- RESERVED --------------------------- // 0x4002_9400-0x4003_FFFF
 #define EMAC_BASEADDR			( AHB1PERIPH_BASEADDR + 0x8000 )    // 0x4002_8000-0x4002_93FF
 // --------------------------- RESERVED --------------------------- // 0x4002_6800-0x4002_7FFF
@@ -224,7 +249,7 @@ typedef struct {
 // --------------------------- RESERVED --------------------------- // 0x4001_5800-0x4001_FFFF
 
 //****************************** APB2 ******************************//
-#define APB2PERIPH_BASEADDR		0x4001_0000U                        //
+#define APB2PERIPH_BASEADDR		0x40010000U                         //
 // --------------------------- RESERVED --------------------------- // 0x4000_4C00-0x4001_57FF
 #define TIM11_BASEADDR			( APB2PERIPH_BASEADDR + 0x4800 )    // 0x4001_4800-0x4001_4BFF
 #define TIM10_BASEADDR			( APB2PERIPH_BASEADDR + 0x4400 )    // 0x4001_4400-0x4001_47FF
