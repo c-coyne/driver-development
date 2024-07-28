@@ -59,6 +59,7 @@ peripheral-drivers/stm32f4xx-drivers/.project
 *.su
 *.idb
 *.pdb
+*.launch
 
 # Kernel Module Compile Results
 *.mod*
