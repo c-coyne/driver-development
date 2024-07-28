@@ -55,7 +55,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
 
 	// 4. Configure the output type
 	temp = ( pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber );
-	pGPIOHandle->pGPIOx->MODER &= ~( 0x01 << ( 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber ) );		// clear register
+	pGPIOHandle->pGPIOx->OTYPER &= ~( 0x01 << ( 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber ) );		// clear register
 	pGPIOHandle->pGPIOx->OTYPER |= temp;	// set register
 
 	temp = 0;
