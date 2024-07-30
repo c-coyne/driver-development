@@ -68,9 +68,9 @@ typedef struct {
 #define GPIO_MODE_ALTFN			2 		// Alternate function mode
 #define GPIO_MODE_ANALOG		3		// Analog mode
 // GPIO interrupt modes
-#define GPIO_MODE_INPUT_FT		4		// Input falling edge trigger
-#define GPIO_MODE_INPUT_RT		5		// Input rising edge trigger
-#define GPIO_MODE_INPUT_RFT		6		// Input rising / falling edge trigger
+#define GPIO_MODE_INT_FT		4		// Input falling edge trigger
+#define GPIO_MODE_INT_RT		5		// Input rising edge trigger
+#define GPIO_MODE_INT_RFT		6		// Input rising / falling edge trigger
 
 // @GPIO_PIN_OUTPUT_TYPES
 // Output types
@@ -109,7 +109,8 @@ void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber);
 
 // IRQ configuration & ISR handling
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t En);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t En);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 
