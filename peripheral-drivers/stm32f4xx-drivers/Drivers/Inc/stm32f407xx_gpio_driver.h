@@ -118,7 +118,7 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 // Lock pin
-uint8_t GPIO_LockPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber);
+uint8_t GPIO_LockPins(GPIO_RegDef_t *pGPIOx, uint16_t pinNumbers);
 
 
 #endif /* INC_STM32F407XX_GPIO_DRIVER_H_ */

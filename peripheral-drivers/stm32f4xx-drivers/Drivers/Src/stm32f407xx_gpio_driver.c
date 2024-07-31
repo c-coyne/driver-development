@@ -41,10 +41,9 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
 	uint32_t temp = 0;
 
 	// Check if the pin is locked
-	uint32_t lockKey = 0x00010000 | ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber );
-	if (pGPIOHandle->pGPIOx->LCKR & lockKey) {
-		// Pin is locked, skip configuration
-		return;
+	if ( (pGPIOHandle->pGPIOx->LCKR & ( 1 << 16 )) && (pGPIOHandle->pGPIOx->LCKR & ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber )) ) {
+	    // Pin is locked, skip configuration
+	    return;
 	}
 
 	// Configure mode of GPIO pin
@@ -472,31 +471,31 @@ void GPIO_IRQHandling(uint8_t PinNumber) {
  *                                                                                                     *
  * @note The lock key sequence involves writing a specific pattern to the GPIO port's lock register,   *
  *       followed by a dummy read to complete the sequence. This function ensures that the specified   *
- *       pin's configuration is locked by checking the lock bit (LCKK) in the lock register.           *
+ *       pins' configuration is locked by checking the lock bit (LCKK) in the lock register.           *
  * @note This lock process sets the LCKR (configuration lock register), which is checked in GPIO_Init  *
  *       prior to any configuration. Therefore, setting the LCKR register will prevent GPIO_Init from  *
- *       making any changes to any registers for the selected GPIO pin.								   *
+ *       making any changes to any registers for the selected GPIO pin(s).							   *
+ * @note The lock sequence can only be performed once per GPIO port. Once a port's LCKK bit is set,	   *
+ *       it cannot be unlocked until a reset of the MCU.											   *
  ******************************************************************************************************/
-uint8_t GPIO_LockPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber)
+uint8_t GPIO_LockPins(GPIO_RegDef_t *pGPIOx, uint16_t pinNumbers)
 {
-    // Create the lock key sequence
-    uint32_t lockKey = 0x00010000 | (1 << pinNumber);
+    // Read the current lock register value
+    uint32_t currentLock = pGPIOx->LCKR;
 
-    // Write the lock key sequence
-    pGPIOx->LCKR = lockKey;        		// Step 1: Write lock key
-    pGPIOx->LCKR = (1 << pinNumber); 	// Step 2: Write pin number
-    pGPIOx->LCKR = lockKey;        		// Step 3: Write lock key again
-    (void)pGPIOx->LCKR;            		// Step 4: Dummy read to complete the sequence
+    // Update the lock register value to include the new pins
+    uint32_t updatedLock = currentLock | pinNumbers;
+
+    // Write the lock key sequence with the updated lock register value
+    pGPIOx->LCKR = 0x00010000 | updatedLock;    // Step 1: Write lock key with updated lock value
+    pGPIOx->LCKR = 0x00000000 | updatedLock;    // Step 2: Write updated lock register value
+    pGPIOx->LCKR = 0x00010000 | updatedLock;    // Step 3: Write lock key again with updated lock value
+    (void)pGPIOx->LCKR;                         // Step 4: Dummy read to complete the sequence
 
     // Verify if the lock is set by reading LCKR
-    if (pGPIOx->LCKR & (1 << 16))  // Check if LCKK bit is set
-    {
+    if (pGPIOx->LCKR & (1 << 16)) {             // Check if LCKK bit is set
         return 1; // Locked
-    }
-    else
-    {
+    } else {
         return 0; // Unlocked
     }
 }
-
-
