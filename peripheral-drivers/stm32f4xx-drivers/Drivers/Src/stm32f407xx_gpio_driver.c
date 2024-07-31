@@ -465,7 +465,7 @@ void GPIO_IRQHandling(uint8_t PinNumber) {
  * until the next reset.                                                                               *
  *                                                                                                     *
  * @param pGPIOx [GPIO_RegDef_t*] Pointer to the GPIO port base address.			                   *
- * @param pinNumber [uint8_t] GPIO pin number to be locked.                                            *
+ * @param pinNumbers [uint8_t] GPIO pin numbers to be locked.                                          *
  *                                                                                                     *
  * @return [uint8_t] Returns 1 if the pin is successfully locked, otherwise returns 0.                 *
  *                                                                                                     *

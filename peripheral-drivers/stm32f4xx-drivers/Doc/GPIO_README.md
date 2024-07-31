@@ -1,6 +1,6 @@
-# GPIO Driver for STM32F407G-DISC1
+# GPIO Driver for STM32F407xx MCU
 
-This repository contains a General Purpose Input/Output (GPIO) driver implemented in C for the STM32F407G-DISC1 discovery board.
+This repository contains a General Purpose Input/Output (GPIO) driver implemented in C for the ARM Cortex-M4 STM32F407xx family of MCU's.
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@ This repository contains a General Purpose Input/Output (GPIO) driver implemente
 
 ## Overview
 
-The GPIO driver provides an interface to initialize, configure, and control the GPIO pins of the STM32F407G-DISC1 development board. It supports various configurations such as input, output, analog, and interrupt modes, as well as pin speed, pull-up/pull-down settings, and alternate functions.
+The GPIO driver provides an interface to initialize, configure, and control the GPIO pins of the STM32F407xx MCU. It supports various configurations such as input, output, analog, and interrupt modes, as well as pin speed, pull-up/pull-down settings, and alternate functions.
 
 ## Features
 
@@ -22,6 +22,7 @@ The GPIO driver provides an interface to initialize, configure, and control the 
 - Read from input pins and ports
 - Configure and handle GPIO interrupts
 - Control the peripheral clock for GPIO ports
+- Lock pins to prevent unintended reconfiguration
 
 ## File Structure
 
@@ -36,7 +37,7 @@ driver-development/
 | | | | ├── stm32f407xx_gpio_driver.h
 | | | | └── stm32f407xx.h
 | | | └── Src/
-| | | | └── stm32f407xx.c
+| | | | └── stm32f407xx_gpio_driver.c
 │ │ ├── Inc/
 │ │ ├── Src/
 | | | ├── main.c
@@ -303,24 +304,24 @@ Configure the interrupt priority for IRQ number 4.
 GPIO_IRQHandling(GPIO_PIN_15);
 ```
 
-### `GPIO_LockPin`
+### `GPIO_LockPins`
 
-Locks the configuration of the specified GPIO pin.
+Locks the configuration of the specified GPIO pins.
 
 ```c
-uint8_t GPIO_LockPin(GPIO_TypeDef *GPIOx, uint16_t PinNumber);
+uint8_t GPIO_LockPins(GPIO_TypeDef *GPIOx, uint16_t PinNumbers);
 ```
 
 #### Parameters
 - `GPIOx`: Pointer to the GPIO port base address.
-- `PinNumber`: GPIO pin number.
+- `PinNumbers`: GPIO pin numbers to be locked.
 
 #### Returns
-- Lock status (`0` or `1`).
+- Lock status (`0` for unlocked or `1` for locked).
 
 #### Example
-Lock the configuration of a specific GPIO pin to prevent changes.
+Lock the configuration of specific GPIO pins to prevent changes. In this case, pins A5 and A6 are locked.
 
 ```c
-uint8_t lockStatus = GPIO_LockPin(GPIOA, GPIO_PIN_5);
+uint8_t lockStatus = GPIO_LockPins(GPIOA, ( 1 << 5 ) | ( 1 << 6 ));
 ```
