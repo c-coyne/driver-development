@@ -1,19 +1,25 @@
 # STM32CubeIDE metadata
 peripheral-drivers/.metadata/
+com-drivers/.metadata/
 
 # Build artifacts
 peripheral-drivers/stm32f4xx-drivers/Debug/
 peripheral-drivers/stm32f4xx-drivers/Release/
+com-drivers/stm32f4xx-drivers/Debug/
+com-drivers/stm32f4xx-drivers/Release/
 *.bin
 
 # Settings files
 peripheral-drivers/stm32f4xx-drivers/.settings/
+com-drivers/stm32f4xx-drivers/.settings/
 *.xml
 *.prefs
 
 # Eclipse project files
 peripheral-drivers/stm32f4xx-drivers/.cproject
 peripheral-drivers/stm32f4xx-drivers/.project
+com-drivers/stm32f4xx-drivers/.cproject
+com-drivers/stm32f4xx-drivers/.project
 *.xmi
 
 # Prerequisites
