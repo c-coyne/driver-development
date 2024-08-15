@@ -40,6 +40,9 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle) {
 
 	uint32_t temp = 0;
 
+	// Enable the peripheral clock
+	GPIO_PeriClockControl(pGPIOHandle->pGPIOx, ENABLE);
+
 	// Check if the pin is locked
 	if ( (pGPIOHandle->pGPIOx->LCKR & ( 1 << 16 )) && (pGPIOHandle->pGPIOx->LCKR & ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber )) ) {
 	    // Pin is locked, skip configuration
