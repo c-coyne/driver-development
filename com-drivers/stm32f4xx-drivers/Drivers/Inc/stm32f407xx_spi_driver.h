@@ -85,17 +85,39 @@ typedef struct {
 #define SPI_SSM_DISABLED				0		// [Default] software slave management disabled (i.e. hardware slave management)
 #define SPI_SSM_ENABLED					1		// Software slave management enabled
 
+// SPI related status flag definitions
+#define SPI_FRE_FLAG					( 1 << SPI_SR_FRE )
+#define SPI_BSY_FLAG					( 1 << SPI_SR_BSY )
+#define SPI_OVR_FLAG					( 1 << SPI_SR_OVR )
+#define SPI_MODF_FLAG					( 1 << SPI_SR_MODF )
+#define SPI_CRCERR_FLAG					( 1 << SPI_SR_CRCERR )
+#define SPI_UDR_FLAG					( 1 << SPI_SR_UDR )
+#define SPI_CHSIDE_FLAG					( 1 << SPI_SR_CHSIDE )
+#define SPI_TXE_FLAG					( 1 << SPI_SR_TXE )
+#define SPI_RXNE_FLAG					( 1 << SPI_SR_RXNE )
+
 /****************************************************
  *  API prototypes								    *
  ****************************************************/
+
+//Periphal clock control
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t En);
+
+// SPI initialization and de-initialization
 void SPI_Init(SPI_Handle_t *pSPIHandle);
 void SPI_DeInit(SPI_RegDef_t *pSPIx);
+
+// Send and receive data
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t length);
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t length);
+
+// IRQ configuration and ISR handling
 void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t En);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void SPI_IRQHandling(SPI_Handle_t *pHandle);
 
+// Other peripheral control API's
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t En);
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t En);
 
 #endif /* INC_STM32F407XX_SPI_DRIVER_H_ */

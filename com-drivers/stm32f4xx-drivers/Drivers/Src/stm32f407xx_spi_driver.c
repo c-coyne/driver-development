@@ -52,6 +52,9 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t En) {
 // Init
 void SPI_Init(SPI_Handle_t *pSPIHandle) {
 
+	// Enable peripheral clock
+	SPI_PeriClockControl(pSPIHandle->pSPIx, ENABLE);
+
 	// First configure SPI_CR1 register
 	uint32_t tempreg = 0;
 
@@ -97,10 +100,55 @@ void SPI_Init(SPI_Handle_t *pSPIHandle) {
 // De-Init
 void SPI_DeInit(SPI_RegDef_t *pSPIx) {
 
+	pSPIx->CR1 = 0;
+
+}
+
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t flag) {
+
+	if (pSPIx->SR & flag) {
+		return FLAG_SET;
+	}
+
+	return FLAG_RESET;
+
 }
 
 // Data send
+// Note, this is a blocking call (it will block while length > 0)
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t length) {
+
+	while (length > 0) {
+
+		// 1. Wait until TXE (transmit buffer empty) bit is set
+		while (SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG)); // wait until TXE = 1 (Tx buffer empty)
+	
+		// 2. Check the DFF bit in CR1 register
+		if (pSPIx->CR1 & ( 1 << SPI_CR1_DFF )) {
+			
+			// 16-bit DFF
+			// 2a. Load the data into the data register (DR)
+			pSPIx->DR = *((uint16_t*)pTxBuffer);
+			length--; // accounts for first byte of data sent
+			length--; // accounts for second byte of data sent
+
+			// 2b. Increment pTxBuffer pointer
+			(uint16_t*)pTxBuffer++; // increment by two bytes
+
+		}
+		else {
+
+			// 8-bit DFF
+			// 2a. Load the data into the data register (DR)
+			pSPIx->DR = *(pTxBuffer);
+			length--; // accounts for byte of data sent
+
+			// 2b. Increment pTxBuffer pointer
+			pTxBuffer++; // increment by one byte
+
+		}
+	
+	}
 
 }
 
@@ -119,5 +167,27 @@ void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority) {
 }
 
 void SPI_IRQHandling(SPI_Handle_t *pHandle) {
+
+}
+
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t En) {
+
+	if (En == ENABLE) {
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	}
+	else {
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
+
+}
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t En) {
+
+	if (En == ENABLE) {
+		pSPIx->CR1 |= (1 << SPI_CR1_SSI);
+	}
+	else {
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
+	}
 
 }
