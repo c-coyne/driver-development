@@ -240,8 +240,61 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t length) {
 
 }
 
-// Data receive
+/*******************************************************************************************************
+ * @brief Receives data from the SPI peripheral (blocking call).                                       *
+ *                                                                                                     *
+ * This function receives data through the SPI peripheral in a blocking manner, meaning it will wait   *
+ * until all the data is received. The function handles both 8-bit and 16-bit data frame formats       *
+ * depending on the DFF bit in the SPI_CR1 register.                                                   *
+ *                                                                                                     *
+ * @param pSPIx [SPI_RegDef_t*] Pointer to the SPI peripheral base address.                            *
+ * @param pRxBuffer [uint8_t*] Pointer to the receive buffer where the data will be stored.            *
+ * @param length [uint32_t] Length of data (in bytes) to be received.                                  *
+ *                                                                                                     *
+ * @return None                                                                                        *
+ *                                                                                                     *
+ * @note This is a blocking call, meaning the function will block execution until the entire data      *
+ *       reception is completed (i.e., until `length` reaches 0). It waits for the RXNE (Receive       *
+ *       buffer not empty) flag to be set before reading data from the SPI data register (DR).         *
+ * @note If the DFF (Data Frame Format) bit in the SPI_CR1 register is set, the function receives data *
+ *       in 16-bit format; otherwise, it receives data in 8-bit format. The function appropriately     *
+ *       increments the receive buffer pointer based on the data frame format.                         *
+ * @note This function should only be used when the SPI is configured in a mode where the SPI          *
+ *       peripheral is actively involved in receiving data (master or slave mode).                     *
+ ******************************************************************************************************/
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t length) {
+
+	while (length > 0) {
+
+		// 1. Wait until RXNE (transmit buffer empty) bit is set
+		while (SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG)); // wait until RXNE = 1 (Rx buffer not empty)
+	
+		// 2. Check the DFF bit in CR1 register
+		if (pSPIx->CR1 & ( 1 << SPI_CR1_DFF )) {
+			
+			// 16-bit DFF
+			// 2a. Load the data from the data register (DR) to the RxBuffer address
+			*((uint16_t*)pRxBuffer) = pSPIx->DR;
+			length--; // accounts for first byte of data sent
+			length--; // accounts for second byte of data sent
+
+			// 2b. Increment pTxBuffer pointer
+			(uint16_t*)pRxBuffer++; // increment by two bytes
+
+		}
+		else {
+
+			// 8-bit DFF
+			// 2a. Load the data from the data register (DR) to the RxBuffer address
+			*((uint16_t*)pRxBuffer) = pSPIx->DR;
+			length--; // accounts for byte of data sent
+
+			// 2b. Increment pTxBuffer pointer
+			pRxBuffer++; // increment by one byte
+
+		}
+	
+	}
 
 }
 
@@ -310,6 +363,35 @@ void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t En) {
 	}
 	else {
 		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
+	}
+
+}
+
+/*******************************************************************************************************
+ * @brief Configures the SSOE (Slave Select Output Enable) for the SPI peripheral.                     *
+ *                                                                                                     *
+ * This function enables or disables the SSOE (Slave Select Output Enable) bit in the CR2 register of  *
+ * the SPI peripheral. When SSOE is enabled, the NSS pin is driven low when the SPI is in master mode, *
+ * ensuring the slave device is selected during communication.                                         *
+ *                                                                                                     *
+ * @param pSPIx [SPI_RegDef_t*] Pointer to the SPI peripheral base address.                            *
+ * @param En [uint8_t] ENABLE to set the SSOE bit, DISABLE to clear it.                                *
+ *                                                                                                     *
+ * @return None                                                                                        *
+ *                                                                                                     *
+ * @note When the SSOE bit is set and the SPI is configured in master mode, the NSS pin is managed     *
+ *       by the SPI hardware and is automatically asserted (driven low) when the SPI is enabled,       *
+ *       and deasserted (driven high) when the SPI is disabled. This is typically used to control      *
+ *       the slave select line in a multi-slave setup.                                                 *
+ * @note Disabling SSOE allows for manual control of the NSS pin if needed in specific configurations. *
+ ******************************************************************************************************/
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t En) {
+
+	if (En == ENABLE) {
+		pSPIx->CR2 |= (1 << SPI_CR2_SSOE);
+	}
+	else {
+		pSPIx->CR2 &= ~(1 << SPI_CR2_SSOE);
 	}
 
 }
